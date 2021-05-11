@@ -9,6 +9,7 @@
 
 using std::map;
 using std::string;
+using std::cin;
 using std::cout;
 using std::endl;
 using std::size_t;
@@ -25,12 +26,7 @@ struct menuItem {
 
 class Menu {
 public:
-    map<string, menuItem> menuItems;
-    size_t width = 80;
-    double ratio = 0.5;
-    size_t descrWidth = 0;
-    size_t cmdStxWidth = 0;
-    string title = "Menu";
+
 
 
     void addItem(const string &name, const menuItem &item);
@@ -47,71 +43,81 @@ public:
 
     double getRatio() const;
 
-    void printHeader(const string &str);
-
-    void printItem(const menuItem &item);
-
-    void printFooter();
-
-    void computeWiths();
-
     void print();
 
+    void run();
+
+private:
+    map<string, menuItem> _menuItems;
+    size_t _width = 80;
+    double _ratio = 0.5;
+    size_t _descrWidth = 0;
+    size_t _cmdStxWidth = 0;
+    string _title = "Menu";
+
+    void _printHeader(const string &str);
+
+    void _printItem(const menuItem &item);
+
+    void _printFooter();
+
+    void _computeWiths();
 
 };
 
 void Menu::addItem(const string &name, const menuItem &item) {
-    this->menuItems[name] = item;
+    this->_menuItems[name] = item;
 }
 
 void Menu::removeItem(const string &name) {
-    this->menuItems.erase(name);
+    this->_menuItems.erase(name);
 }
 
 void Menu::setWidth(const size_t &w) {
-    this->width = w;
+    this->_width = w;
 }
 
 size_t Menu::getWidth() const {
-    return this->width;
+    return this->_width;
 }
 
 void Menu::print() {
-    this->computeWiths();
-    this->printHeader(this->title);
-    for (auto const &[key, value] : this->menuItems) {
-        this->printItem(value);
+    this->_computeWiths();
+    this->_printHeader(this->_title);
+    for (auto const &[key, value] : this->_menuItems) {
+        this->_printItem(value);
     }
-    this->printFooter();
+    this->_printFooter();
+    cout<<endl;
 }
 
-void Menu::printHeader(const string &str) {
+void Menu::_printHeader(const string &str) {
     cout << (char) 201; // ╔
-    for (int i = 0; i < this->width - 2; ++i) {
+    for (int i = 0; i < this->_width - 2; ++i) {
         cout << (char) 205; // ═
     }
     cout << (char) 187; // ╗
     cout << endl;
 
     cout << (char) 186; // ║
-    for (int i = 0; i < (width - str.size() - 2) / 2; ++i) {
+    for (int i = 0; i < (_width - str.size() - 2) / 2; ++i) {
         cout << ' ';
     }
 
     cout << str;
 
-    for (int i = 0; i < (width - str.size() - 1) / 2; ++i) {
+    for (int i = 0; i < (_width - str.size() - 1) / 2; ++i) {
         cout << ' ';
     }
     cout << (char) 186; // ║
     cout << endl;
 
     cout << (char) 204; // ╠
-    for (int i = 0; i < this->cmdStxWidth; ++i) {
+    for (int i = 0; i < this->_cmdStxWidth; ++i) {
         cout << (char) 205; // ═
     }
     cout << (char) 203; // ╦
-    for (int i = 0; i < this->descrWidth; ++i) {
+    for (int i = 0; i < this->_descrWidth; ++i) {
         cout << (char) 205; // ═
     }
 
@@ -121,16 +127,16 @@ void Menu::printHeader(const string &str) {
 
 }
 
-void Menu::printItem(const menuItem &item) {
+void Menu::_printItem(const menuItem &item) {
 
-    if (item.cmdSyntax.size() > this->cmdStxWidth) {
+    if (item.cmdSyntax.size() > this->_cmdStxWidth) {
 
     }
-    size_t stxLinesCount = item.cmdSyntax.size() / this->cmdStxWidth
-                           + !!(item.cmdSyntax.size() % this->cmdStxWidth);
+    size_t stxLinesCount = item.cmdSyntax.size() / this->_cmdStxWidth
+                           + !!(item.cmdSyntax.size() % this->_cmdStxWidth);
 
-    size_t descrLinesCount = item.description.size() / this->descrWidth
-                             + !!(item.description.size() % this->descrWidth);
+    size_t descrLinesCount = item.description.size() / this->_descrWidth
+                             + !!(item.description.size() % this->_descrWidth);
 
     size_t n = max(stxLinesCount, descrLinesCount);
 
@@ -138,32 +144,32 @@ void Menu::printItem(const menuItem &item) {
 
         string
                 stx = k < stxLinesCount ?
-                      item.cmdSyntax.substr(k * this->cmdStxWidth, this->cmdStxWidth) : "",
+                      item.cmdSyntax.substr(k * this->_cmdStxWidth, this->_cmdStxWidth) : "",
                 descr = k < descrLinesCount ?
-                        item.description.substr(k * this->descrWidth, this->descrWidth) : "";
+                        item.description.substr(k * this->_descrWidth, this->_descrWidth) : "";
 
 
         cout << (char) 186; // ║
 
-        size_t stxSpaceBefore = k ? 0 : (this->cmdStxWidth - stx.size()) / 2;
+        size_t stxSpaceBefore = k ? 0 : (this->_cmdStxWidth - stx.size()) / 2;
 
         for (int i = 0; i < stxSpaceBefore; ++i) {
             cout << ' ';
         }
         cout << stx;
-        for (int i = 0; i < this->cmdStxWidth - stxSpaceBefore - stx.size(); ++i) {
+        for (int i = 0; i < this->_cmdStxWidth - stxSpaceBefore - stx.size(); ++i) {
             cout << ' ';
         }
 
         cout << (char) 186; // ║
 
 
-        size_t descrSpaceBefore = k ? 0 : (this->descrWidth - descr.size()) / 2;
+        size_t descrSpaceBefore = k ? 0 : (this->_descrWidth - descr.size()) / 2;
         for (int i = 0; i < descrSpaceBefore; ++i) {
             cout << ' ';
         }
         cout << descr;
-        for (int i = 0; i < this->descrWidth - descrSpaceBefore - descr.size(); ++i) {
+        for (int i = 0; i < this->_descrWidth - descrSpaceBefore - descr.size(); ++i) {
             cout << ' ';
         }
 
@@ -176,13 +182,13 @@ void Menu::printItem(const menuItem &item) {
 
     cout << (char) 204; // ╠
 
-    for (int i = 0; i < this->cmdStxWidth; ++i) {
+    for (int i = 0; i < this->_cmdStxWidth; ++i) {
         cout << (char) 205; // ═
     }
 
     cout << (char) 203; //╦
 
-    for (int i = 0; i < this->descrWidth; ++i) {
+    for (int i = 0; i < this->_descrWidth; ++i) {
         cout << (char) 205; // ═
     }
 
@@ -192,30 +198,30 @@ void Menu::printItem(const menuItem &item) {
 }
 
 void Menu::setRatio(const double &r) {
-    this->ratio = r;
+    this->_ratio = r;
 }
 
 double Menu::getRatio() const {
-    return this->ratio;
+    return this->_ratio;
 }
 
-void Menu::computeWiths() {
-    if (!this->cmdStxWidth) {
-        this->cmdStxWidth = ceil(this->width * this->ratio / (1 + this->ratio));
-        this->descrWidth = this->width - cmdStxWidth - 3;
+void Menu::_computeWiths() {
+    if (!this->_cmdStxWidth) {
+        this->_cmdStxWidth = ceil(this->_width * this->_ratio / (1 + this->_ratio));
+        this->_descrWidth = this->_width - _cmdStxWidth - 3;
     }
 }
 
-void Menu::printFooter() {
+void Menu::_printFooter() {
     cout << (char) 200; //╚
 
-    for (int i = 0; i < this->cmdStxWidth; ++i) {
+    for (int i = 0; i < this->_cmdStxWidth; ++i) {
         cout << (char) 205; // ═
     }
 
     cout << (char) 202; //╩
 
-    for (int i = 0; i < this->descrWidth; ++i) {
+    for (int i = 0; i < this->_descrWidth; ++i) {
         cout << (char) 205; // ═
     }
 
@@ -223,7 +229,18 @@ void Menu::printFooter() {
 }
 
 void Menu::setTitle(const string &name) {
-    this->title = name;
+    this->_title = name;
+}
+
+void Menu::run() {
+    this->print();
+    string cmd;
+    while (cmd!="/exit"){
+        cin>>cmd;
+        for (auto const &[key, value] : this->_menuItems){
+            if(key == cmd) value.func();
+        }
+    }
 }
 
 
