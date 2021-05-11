@@ -26,9 +26,6 @@ struct menuItem {
 
 class Menu {
 public:
-
-
-
     void addItem(const string &name, const menuItem &item);
 
     void setTitle(const string &name);
@@ -88,7 +85,7 @@ void Menu::print() {
         this->_printItem(value);
     }
     this->_printFooter();
-    cout<<endl;
+    cout << endl;
 }
 
 void Menu::_printHeader(const string &str) {
@@ -235,10 +232,10 @@ void Menu::setTitle(const string &name) {
 void Menu::run() {
     this->print();
     string cmd;
-    while (cmd!="/exit"){
-        cin>>cmd;
-        for (auto const &[key, value] : this->_menuItems){
-            if(key == cmd) value.func();
+    while (cmd != "/exit") {
+        cin >> cmd;
+        for (auto const &[key, value] : this->_menuItems) {
+            if (key == cmd) value.func();
         }
     }
 }
